@@ -2,6 +2,7 @@ package com.michal.examples.spring.security;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import com.michal.examples.spring.security.dto.CashCardResponseDto;
 import net.minidev.json.JSONArray;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import java.net.URI;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CashCardApplicationTests {
+class CashCardResponseDtoApplicationTests {
     @Autowired
     TestRestTemplate restTemplate;
 
@@ -48,10 +49,10 @@ class CashCardApplicationTests {
     @Test
     @DirtiesContext
     void shouldCreateANewCashCard() {
-        CashCard newCashCard = new CashCard(null, 250.00, "sarah1");
+        CashCardResponseDto newCashCardResponseDto = new CashCardResponseDto(null, 250.00, "sarah1");
         ResponseEntity<Void> createResponse = restTemplate
                 .withBasicAuth("sarah1", "abc123")
-                .postForEntity("/cashcards", newCashCard, Void.class);
+                .postForEntity("/cashcards", newCashCardResponseDto, Void.class);
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         URI locationOfNewCashCard = createResponse.getHeaders().getLocation();

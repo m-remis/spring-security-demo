@@ -1,5 +1,6 @@
 package com.michal.examples.spring.security;
 
+import com.michal.examples.spring.security.dto.CashCardResponseDto;
 import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,33 +13,33 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JsonTest
-class CashCardJsonTest {
+class CashCardResponseDtoJsonTest {
 
     @Autowired
-    private JacksonTester<CashCard> json;
+    private JacksonTester<CashCardResponseDto> json;
 
     @Autowired
-    private JacksonTester<CashCard[]> jsonList;
+    private JacksonTester<CashCardResponseDto[]> jsonList;
 
-    private CashCard[] cashCards;
+    private CashCardResponseDto[] cashCardResponseDtos;
 
     @BeforeEach
     void setUp() {
-        cashCards = Arrays.array(
-                new CashCard(99L, 123.45, "sarah1"),
-                new CashCard(100L, 1.00, "sarah1"),
-                new CashCard(101L, 150.00, "sarah1"));
+        cashCardResponseDtos = Arrays.array(
+                new CashCardResponseDto(99L, 123.45, "sarah1"),
+                new CashCardResponseDto(100L, 1.00, "sarah1"),
+                new CashCardResponseDto(101L, 150.00, "sarah1"));
     }
 
     @Test
     void cashCardSerializationTest() throws IOException {
-        CashCard cashCard = cashCards[0];
-        assertThat(json.write(cashCard)).isStrictlyEqualToJson("single.json");
-        assertThat(json.write(cashCard)).hasJsonPathNumberValue("@.id");
-        assertThat(json.write(cashCard)).extractingJsonPathNumberValue("@.id")
+        CashCardResponseDto cashCardResponseDto = cashCardResponseDtos[0];
+        assertThat(json.write(cashCardResponseDto)).isStrictlyEqualToJson("/json/single.json");
+        assertThat(json.write(cashCardResponseDto)).hasJsonPathNumberValue("@.id");
+        assertThat(json.write(cashCardResponseDto)).extractingJsonPathNumberValue("@.id")
                 .isEqualTo(99);
-        assertThat(json.write(cashCard)).hasJsonPathNumberValue("@.amount");
-        assertThat(json.write(cashCard)).extractingJsonPathNumberValue("@.amount")
+        assertThat(json.write(cashCardResponseDto)).hasJsonPathNumberValue("@.amount");
+        assertThat(json.write(cashCardResponseDto)).extractingJsonPathNumberValue("@.amount")
                 .isEqualTo(123.45);
     }
 
@@ -52,14 +53,14 @@ class CashCardJsonTest {
                 }
                 """;
         assertThat(json.parse(expected))
-                .isEqualTo(new CashCard(99L, 123.45, "sarah1"));
+                .isEqualTo(new CashCardResponseDto(99L, 123.45, "sarah1"));
         assertThat(json.parseObject(expected).id()).isEqualTo(99L);
         assertThat(json.parseObject(expected).amount()).isEqualTo(123.45);
     }
 
     @Test
     void cashCardListSerializationTest() throws IOException {
-        assertThat(jsonList.write(cashCards)).isStrictlyEqualToJson("list.json");
+        assertThat(jsonList.write(cashCardResponseDtos)).isStrictlyEqualToJson("/json/list.json");
     }
 
     @Test
@@ -72,6 +73,6 @@ class CashCardJsonTest {
                                                   
                 ]
                 """;
-        assertThat(jsonList.parse(expected)).isEqualTo(cashCards);
+        assertThat(jsonList.parse(expected)).isEqualTo(cashCardResponseDtos);
     }
 }
